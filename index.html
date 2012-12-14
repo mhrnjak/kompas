@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+
+<script type="text/javascript" src="jQueryRotate.2.2.js"></script>
+
+<script type="text/javascript" src="cordova-2.1.0.js"></script>
+<script type="text/javascript">
+var hc;
+var pgr = true; 
+var hasCompass = true;
+var watchID;
+function onBodyLoad() {
+document.addEventListener("deviceready", onDeviceReady, false);	
+}
+
+function onDeviceReady() {
+hc = document.getElementById('headingInfo');
+pgr = true;	
+var watchID;
+
+var watchOptions = {frequency: 200};
+watchID = navigator.compass.watchHeading(onHeadingSuccess, onHeadingError, watchOptions );
+}
+
+function getHeading() {
+	hc = document.getElementById('headingInfo');
+
+	if (pgr == true) {
+		if (hasCompass == true) {
+			hc.innerHTML = "Učitavam informacije kompasa...";
+			navigator.compass.getCurrentHeading(onHeadingSuccess, onHeadingError);
+		}
+		else {
+			alert("Uređaj nema kompas!");	
+		}
+	}
+	else {
+		alert("PhoneGap se učitava, pokušajte ponovno...");
+	}
+}
+
+function onHeadingSuccess(heading) {
+	hc.innerHTML = "Magnetski: " + heading.magneticHeading + "<br />Pravi: " + heading.trueHeading;
+	$("#igla").rotate(heading.magneticHeading);
+}
+
+function onHeadingError(compassError){
+	if (compassError.code == CompassError.COMPASS_NOT_SUPPORTED) {
+		alert("Uređaj nema kompasa");	
+	}
+	else {
+	alert("Dogodila se greška");	
+	}
+}
+</script>
+
+  <style>
+#kompas {
+	background-image:url(compass.png);
+	background-repeat:no-repeat;
+	width:310px;
+	height:310px;
+	margin:10px auto;
+}
+</style>
+</head>
+
+<body onload="onBodyLoad();">
+<p id="headingInfo"></p>
+<div id="kompas">
+<div id="igla"><img src="needle.png" /></div>
+</div>
+</body>
+</html>

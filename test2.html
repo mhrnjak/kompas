@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>PhoneGap test</title>
+<script type="text/javascript" src="cordova-2.1.0.js"></script>
+<script type="text/javascript">
+var ac;
+var awID;
+var watchID, hi;
+var pgr = false;
+function onBodyLoad(){
+	document.addEventListener("deviceready", onDeviceReady, false);	
+	var element = document.getElementById('appInfo');
+	var hasCompass = true;
+	element.innerHTML ="";
+}
+function onDeviceReady() {
+	var element = document.getElementById('appInfo');
+	var ac = document.getElementById('accelInfo');
+	ac.innerHTML ="AC Spreman";
+	var hc = document.getElementById('headingInfo');
+	hc.innerHTML ="Kompas spreman";
+	pgr = true;
+	element.innerHTML = 'PhoneGap (verzija ' + device.phonegap + ')<br />' + device.platform + ' ' + device.name + ' (version ' + device.version + ').';
+	var accelOptions = {frequency: 1};
+	awID = navigator.accelerometer.watchAcceleration(moveObject, onAccelFailure, accelOptions);
+	var watchOptions = {frequency: 1};
+	watchID = navigator.compass.watchHeading(onHeadingSuccess, onHeadingError, watchOptions);
+}
+function getHeading() {
+		var hc = document.getElementById('headingInfo');
+		hc.innerHTML = "Učitavam kompas...";
+		navigator.compass.getCurrentHeading(onHeadingSuccess, onHeadingError);
+}
+function onHeadingSuccess(heading){
+			var hc = document.getElementById('headingInfo');
+hc.innerHTML="tu sam";
+		hc.innerHTML = "Magnetic heading: " + heading.magneticHeading + "<br />True heading: " + heading.trueHeading + "<br />Točnost: " + heading.headingAccuracy;
+
+}
+
+function onHeadingError(){
+			var hc = document.getElementById('headingInfo');
+hc.innerHTML="tu sam error";
+		
+}
+
+
+function getAcceleration() {
+	//if (pgr==true){
+			var ac = document.getElementById('accelInfo');
+
+		ac.innerHTML="aaa";
+		navigator.accelerometer.getCurrentAcceleration(onAccelSuccess, onAccelFailure);		
+	//}
+	/*else {alert("PhoneGap nije spreman!");}*/
+}
+function onAccelSuccess(accel) {
+	
+	var d = new Date(accel.timestamp);
+	var ac = document.getElementById('accelInfo');
+	
+	var x = parseInt(accel.x,10);
+	var y = parseInt(accel.y,10);
+
+	ac.innerHTML = "<strong>Trenutni položaj: </strong><br>X: " + accel.x + "<br />Y: " + accel.y + "<br />Z: " + accel.z + "<br />Timestamp: " + d.toLocaleDateString() + "<br />X:" +x;
+
+		/*  $("#kocka").animate({"top": "-=" + y + "px"});
+
+	  $("#kocka").animate({"left": "-=" + x + "px"});*/
+	  
+	  }
+	  
+	 function moveObject(acceleration) {
+        var myObj = $('#obj');
+        var wall = $('#obj_wall');
+        var objPosition = myObj.position();
+        var leftBoundary = 0;
+        var topBoundary = 0;
+        var rightBoundary = wall.width() - myObj.width() - 10; // 10 represents the 10px for the margin
+        var bottomBoundary = wall.height() - myObj.height() - 10; // 10 represents the 10px for the margin
+ 
+        if( acceleration.x < 0 && objPosition.left <= rightBoundary ) {
+            myObj.animate({
+                left:'+=10'
+            },100);
+        } else if( acceleration.x > 0 && objPosition.left > leftBoundary ) {
+            myObj.animate({
+                left:'-=10'
+            },100);
+        }
+        if( acceleration.y < 0 && objPosition.top > topBoundary ) {
+            myObj.animate({
+                top:'-=10'
+            },100);
+        } else if(acceleration.y > 0 && objPosition.top <= bottomBoundary ) {
+            myObj.animate({
+                top:'+=10'
+            },100);
+        }
+    }
+	
+	function onAccelFailure(accel) {
+	
+	ac.innerHTML = "Fail!";
+	}
+</script>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <style>
+#obj{
+    width:50px;
+    height:50px;
+    background-color:red;
+    position:absolute;
+    top:0;
+    left:0;
+}
+ 
+#obj_wall{
+    margin:10px auto;
+    width:200px;
+    height:200px;
+    border:1px solid blue;
+    position:relative;
+}
+</style>
+</head>
+
+<body onLoad="onBodyLoad()">
+<p id="appInfo"></p>
+<p id="accelInfo"></p>
+<p id="headingInfo"></p>
+<div id="obj_wall">
+
+<div id="obj"></div>
+
+</div>
+</body>
+</html>
