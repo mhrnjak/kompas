@@ -1,74 +1,61 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Untitled Document</title>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Compass Example</title>
 
-<script type="text/javascript" src="cordova-2.1.0.js"></script>
-<script type="text/javascript">
-var hc;
-var pgr = true; 
-var hasCompass = true;
-var watchID;
-function onBodyLoad() {
-document.addEventListener("deviceready", onDeviceReady, false);	
-}
+    <script type="text/javascript" charset="utf-8" src="cordova-2.1.0.js"></script>
+    <script type="text/javascript" charset="utf-8">
 
-function onDeviceReady() {
-hc = document.getElementById('headingInfo');
-pgr = true;	
-var watchID;
+    // The watch id references the current `watchHeading`
+    var watchID = null;
 
-var watchOptions = {frequency: 200};
-watchID = navigator.compass.watchHeading(onHeadingSuccess, onHeadingError, watchOptions );
-}
+    // Wait for PhoneGap to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
 
-function getHeading() {
-	hc = document.getElementById('headingInfo');
+    // PhoneGap is ready
+    //
+    function onDeviceReady() {
+        startWatch();
+    }
 
-	if (pgr == true) {
-		if (hasCompass == true) {
-			hc.innerHTML = "Učitavam informacije kompasa...";
-			navigator.compass.getCurrentHeading(onHeadingSuccess, onHeadingError);
-		}
-		else {
-			alert("Uređaj nema kompas!");	
-		}
-	}
-	else {
-		alert("PhoneGap se učitava, pokušajte ponovno...");
-	}
-}
+    // Start watching the compass
+    //
+    function startWatch() {
 
-function onHeadingSuccess(heading) {
-	var hc = document.getElementById('headingInfo');
+        // Update compass every 3 seconds
+        var options = { frequency: 3000 };
 
-	hc.innerHTML = "Magnetski: " + heading.magneticHeading + "<br />Pravi: " + heading.trueHeading;
-}
+        watchID = navigator.compass.watchHeading(onSuccess, onError, options);
+    }
 
-function onHeadingError(compassError){
-	if (compassError.code == CompassError.COMPASS_NOT_SUPPORTED) {
-		alert("Uređaj nema kompasa");	
-	}
-	else {
-	alert("Dogodila se greška");	
-	}
-}
-</script>
+    // Stop watching the compass
+    //
+    function stopWatch() {
+        if (watchID) {
+            navigator.compass.clearWatch(watchID);
+            watchID = null;
+        }
+    }
 
-  <style>
-#kompas {
-	background-image:url(compass.png);
-	background-repeat:no-repeat;
-	width:310px;
-	height:310px;
-	margin:10px auto;
-}
-</style>
-</head>
+    // onSuccess: Get the current heading
+    //
+    function onSuccess(heading) {
+        var element = document.getElementById('heading');
+        element.innerHTML = 'Heading: ' + heading.magneticHeading;
+    }
 
-<body onload="onBodyLoad();">
-<p id="headingInfo">Čekam...</p>
+    // onError: Failed to get the heading
+    //
+    function onError() {
+        alert('onError!');
+    }
 
-</body>
+    </script>
+  </head>
+  <body>
+    <div id="heading">Waiting for heading...</div>
+    <button onclick="startWatch();">Start Watching</button>
+    <button onclick="stopWatch();">Stop Watching</button>
+  </body>
 </html>
