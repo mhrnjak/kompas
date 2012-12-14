@@ -3,10 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Untitled Document</title>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
-
-<script type="text/javascript" src="jQueryRotate.2.2.js"></script>
-
+<!-- <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+-->
+<!-- <script type="text/javascript" src="jQueryRotate.2.2.js"></script>
+-->
 <script type="text/javascript" src="cordova-2.1.0.js"></script>
 <script type="text/javascript">
 var hc;
@@ -47,7 +47,7 @@ function onHeadingSuccess(heading) {
 	var hc = document.getElementById('headingInfo');
 
 	hc.innerHTML = "Magnetski: " + heading.magneticHeading + "<br />Pravi: " + heading.trueHeading;
-	$("#igla").rotate(heading.magneticHeading);
+	//$("#igla").rotate(heading.magneticHeading);
 }
 
 function onHeadingError(compassError){
@@ -72,9 +72,9 @@ function onHeadingError(compassError){
 </head>
 
 <body onload="onBodyLoad();">
-<p id="headingInfo"></p>
+<p id="headingInfo">Čekam...</p><!--
 <div id="kompas">
 <div id="igla"><img src="needle.png" /></div>
-</div>
+</div>-->
 </body>
 </html>
