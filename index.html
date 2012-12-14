@@ -44,6 +44,8 @@ function getHeading() {
 }
 
 function onHeadingSuccess(heading) {
+	var hc = document.getElementById('headingInfo');
+
 	hc.innerHTML = "Magnetski: " + heading.magneticHeading + "<br />Pravi: " + heading.trueHeading;
 	$("#igla").rotate(heading.magneticHeading);
 }
