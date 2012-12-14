@@ -2,8 +2,8 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.phonegap.hello-world"
-        version   = "2.0.0">
-    <name>Kompas PhoneGap aplikacija</name>
+        version   = "2.2.0">
+    <name>Kompas PhoneGap aplikacija 2</name>
 
     <description>
 		Prva aplikacija koja koristi neke PhoneGap feature
